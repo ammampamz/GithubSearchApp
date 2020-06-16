@@ -1,0 +1,89 @@
+@{
+    ViewData["Title"] = "";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Search repository</title>
+         
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+         
+        <style>
+            body {
+                background-color: rgb(220, 155, 241);
+            }
+            .w3-button {width:1080px;}
+            </style>
+    </head>
+        <body>
+          <div class="container">
+              <form id="form3">
+                  <br>
+                  <h1 style="text-align: center;font-family: Sans-serif">Search repository</h1><br>
+                  <div class="form-group">
+                  <input type="text" class="form-control ml-4" id="repository" placeholder="fill your reqire" required>
+                </div>
+                <div class="form-group center">
+                    <button class="w3-button w3-aqua ml-4" >search</button>
+                </div>
+
+                </form>
+                <div id="result3">
+
+                </div>
+          </div>
+        </body>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="script.js"></script>
+        <script src="https://rawcdn.githack.com/zenorocha/clipboard.js/v2.0.4/dist/clipboard.min.js"></script>
+        @*<script type="text/javascript">*@
+        <script>
+    $(document).ready(function() {
+    var repo = ''
+    var user = ''
+    var clipboard = new ClipboardJS('.btn');
+    var btn = document.querySelectorAll('button');
+    $("#form3").submit(function (event) {
+        event.preventDefault()
+        var repository = $("#repository").val()
+        searchRes(repository)
+        
+    })
+    $("#repository").change(function(){
+        var repository = $("#repository").val()
+        searchRes(repository)
+    })
+  
+                
+                
+    function searchRes(repository){
+        $("#result3").empty()
+        $.get("https://api.github.com/search/repositories?q=" + repository + "+in:repo",function(data){
+            console.log(data)
+            data.items.forEach(item => {
+                repo = `<a target="_blank" href="${item.clone_url}"><h1>${item.name}</h1></a>
+                <a target="_blank" href="https://github.com/${item.full_name}/archive/master.zip"  ><h2>dowload</h2></a>
+                <input id="copyinput" value="${item.clone_url}">
+                <button class="btn btn-primary" data-clipboard-target="#copyinput">copy</button>
+                 `
+                 $("#result3").append(repo)
+                
+
+            });
+            
+                
+        })
+    }
+    
+
+               
+})
+        </script>
+        
+
+</html>
